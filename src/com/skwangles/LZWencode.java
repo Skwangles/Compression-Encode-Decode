@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class LZWencode {
-    public static char[] applicableChars = { 'A', 'B', 'C', 'D'};//To test with tony's numbers
-    //public static char[] applicableChars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};//NEED TO CHECK IF A SPACE BETWEEN HEX is applicable
+    //public static char[] applicableChars = { 'A', 'B', 'C', 'D'};//To test with tony's numbers
+    public static char[] applicableChars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};//NEED TO CHECK IF A SPACE BETWEEN HEX is applicable
     public static StringBuilder input;
     public static int phrases;
     public static void main(String[] args){//Static main function allow LZWencode to be a standalone file
