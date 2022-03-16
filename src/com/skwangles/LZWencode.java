@@ -9,12 +9,11 @@ public class LZWencode {
     public static StringBuilder input;
     public static int phrases;
     public static void main(String[] args){//Static main function allow LZWencode to be a standalone file
-
         //
         //Setup
         //
         input = new StringBuilder();
-        phrases = 0;
+        phrases = 1;//Defines the starting phrase number - 0 is nothing, 1 is 0, 2 is 1, etc - need the 0 for bit packing, otherwise uneven output may yield a bunch of phrase 0s
         TrieNode root = new TrieNode('\0', -1);//Root has no applicable phrase number
         for (char c: applicableChars) {
             root.AddChild(c, getPhraseNumber());//Creates Node, and assigns phraseNumber
