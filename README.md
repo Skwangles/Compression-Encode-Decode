@@ -11,10 +11,12 @@ javac -d . src/com/skwangles/LZWencode.java
 javac -d . src/com/skwangles/LZWdecode.java
 ```
 To execute just run:
-```
-java com.skwangles.LZWencode
+
+`java com.skwangles.LZWencode` for encoding
+
 or
-java com.skwangles.LZWencode
+
+`java com.skwangles.LZWdecode` for decoding
 ```
 
 # Test encoding/decoding in one line:
