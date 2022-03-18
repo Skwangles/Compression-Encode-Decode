@@ -1,8 +1,8 @@
 package com.skwangles;
 //Alexander Stokes - 1578409, Liam Labuschagne - 1575313
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 public class LZWpack {
     private static final int sizeOfByte = 8;
@@ -20,12 +20,14 @@ public class LZWpack {
         String text;
         try {
             while ((text = br.readLine()) != null) {
-                bytePrint(Integer.parseInt(text));//Stream value through
+                bytePrint(Integer.parseInt(text)+1);//Stream value through - Adding 1 to use non-zero based indexes
             }
         }
         catch (Exception e){
             System.out.println("Exception Thrown: " + e);
         }
+        endOfFile();//Makes sure all remaining bits are printed
+
     }
 
     private static void bytePrint(int input){
@@ -42,10 +44,20 @@ public class LZWpack {
     //int will fit perfectly - no wiggle room
             //Do stuff
             System.out.write(outByte);
+            outByte = 0;//Cleans the byte to avoid carried bits
+            outByteused = 0;//Finally, resets the amount of the byte used to 0
         }
-        else{//The int will fit easily
-    //do stuff
+        else{//The int will fit easily - but not finish the byte
+            outByte = (byte) (outByte |(input << ((sizeOfByte-outByteused)-currentMaxBitsNum)));//Aligns bits and ORs them
+            outByteused += currentMaxBitsNum;//Increase the amount used
         }
+    }
+
+    private static void endOfFile(){//Ensure any partially filled bytes are printed
+        if(outByte > 0){//Checks if a byte is partially formed - otherwise won't do anything
+            outByte = (byte) (outByte & (0xFF << sizeOfByte-outByteused));//Creates a bitmask and cleans the byte to ensure no unexpected bits are in the remainder
+            System.out.write(outByte);
+        }//Only prints any remaining important bits, leaves the rest as 0
     }
 
     private static void updateMaxBitsNum(){//Updates and Returns the current Mac number of bits number should take up.
