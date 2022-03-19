@@ -44,7 +44,6 @@ public class LZWpack {
 
     private static void packToBinary(int input){
         updateBitsRequired(); //Update currentMaxBits
-        System.out.println(input + " " +countOfPhrases + " " + bitsRequired);
         if((outputBitCount - bitsInUse) < bitsRequired){//See if remainder the of space can fit the input
             int temp =  (input << (2* outputBitCount - bitsRequired - bitsInUse));//Creates the overflow value
             int shiftedInput = (input >> (bitsRequired - (outputBitCount - bitsInUse)));//Shifts the bits to fit in the remaining space
