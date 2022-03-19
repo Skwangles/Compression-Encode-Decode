@@ -36,12 +36,12 @@ public class LZWpack {
     private static void bytePrint(int input){
         updateMaxBitsNum(); //Update currentMaxBits
         if((sizeOfByte - outByteused) < currentMaxBitsNum){//See if remainder of space can fit the input
-            byte temp = (byte) (input << (2*sizeOfByte-currentMaxBitsNum-outByteused));//Creates the overflow value- also makes sure it is not signed
+            byte temp = (byte) (input << (2*sizeOfByte-currentMaxBitsNum-outByteused));//Creates the overflow value
             byte sizeAdjustInput = (byte) (input >> (currentMaxBitsNum - (sizeOfByte-outByteused)));//Shifts the bits to fit in the remaining space
             outByte = (byte) (outByte | sizeAdjustInput);
             printOut(outByte);
             outByte = temp;//
-            outByteused = (currentMaxBitsNum % (sizeOfByte-outByteused));
+            outByteused = currentMaxBitsNum + outByteused - sizeOfByte;
         }
         else if((sizeOfByte-outByteused) == currentMaxBitsNum) {
     //int will fit perfectly - no wiggle room
@@ -58,7 +58,7 @@ public class LZWpack {
     }
 
     private static void endOfFile(){//Ensure any partially filled bytes are printed
-        if(outByte > 0){//Checks if a byte is partially formed - otherwise won't do anything
+        if(outByteused > 0 && outByteused < sizeOfByte ){//Checks if a byte is partially formed - otherwise won't do anything (not checking the value of outbyte as it may have straight 0s that are important)
             outByte = (byte) (outByte & (0xFF << sizeOfByte-outByteused));//Creates a bitmask and cleans the byte to ensure no unexpected bits are in the remainder
             printOut(outByte);
         }//Only prints any remaining important bits, leaves the rest as 0
