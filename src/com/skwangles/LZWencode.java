@@ -1,5 +1,6 @@
 package com.skwangles;
-
+//Alexander Stokes - 1578409, Liam Labuschagne - 1575313
+//Alexander developed this part
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
