@@ -4,7 +4,7 @@ package com.skwangles;
 import java.util.Scanner;
 
 public class LZWpack {
-    private static final int outputBitCount = 32;//32bit Integers
+    private static final int outputBitCount = 8;//32bit Integers
     private static final int initalDictSize = 17;//Is 17, because we are operating with non-zerobased values (0 is escape)
     private static int bitsRequired;
     private static int countOfPhrases;
@@ -40,6 +40,7 @@ public class LZWpack {
         if(bitsInUse != 0){
             printOut(outByte);
         }
+        System.out.flush();//Prints the bytes in the buffer to the output
     }
 
     private static void packToBinary(int input){
@@ -49,7 +50,7 @@ public class LZWpack {
             int shiftedInput = (input >> (bitsRequired - (outputBitCount - bitsInUse)));//Shifts the bits to fit in the remaining space
             outByte =  (outByte | shiftedInput);
             printOut(outByte);
-            outByte = temp;//
+            outByte = temp;
             bitsInUse = bitsRequired + bitsInUse - outputBitCount;
         }
         else if((outputBitCount - bitsInUse) == bitsRequired) {
@@ -73,5 +74,6 @@ public class LZWpack {
 
     private static void printOut(int outByte){
         System.out.write(outByte);
+
     }
 }
