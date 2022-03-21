@@ -13,7 +13,7 @@ public class LZWencode {
         //Setup
         //
         input = new StringBuilder();
-        phrases = 1;//Defines the starting phrase number - Tony said we can pick 0 or 1 as the start, we opted for 1.
+        phrases = 0;//Defines the starting phrase number
         TrieNode root = new TrieNode('\0', -1);//Root has no applicable phrase number
         for (char c: applicableChars) {
             root.AddChild(c, getPhraseNumber());//Creates Node, and assigns phraseNumber
