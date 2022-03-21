@@ -34,7 +34,9 @@ public class LZWencode {
         String text;
         try {
             while ((text = br.readLine()) != null) {
-                input.append(text.toUpperCase());//Adds to input string, and ensures all hex chars are uppercase
+                text = text.replaceAll("\\s","").toUpperCase();//Removes all whitespace
+                if(text.equals("")) continue;//Do not add an empty string
+                input.append(text);//Adds to input string, and ensures all hex chars are uppercase
             }
         }
         catch (Exception e){
