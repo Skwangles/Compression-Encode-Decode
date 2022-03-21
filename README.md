@@ -17,10 +17,13 @@ To execute just run:
 or
 
 `java com.skwangles.LZWdecode` for decoding
-```
 
-# Test encoding/decoding in one line:
-echo "AAABC00FFA2" | java LZWencode.java | java LZWdecode.java
 
-# Doing it a ridiculous number of times:
-echo "AAABC00FFA2" | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java
+## Test encoding/decoding in one line:
+`echo "AAABC00FFA2" | java LZWencode.java | java LZWdecode.java`
+
+## Doing it a ridiculous number of times:
+```echo "AAABC00FFA2" | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java | java LZWencode.java | java LZWdecode.java```
+
+## Test encoding, packing, unpacking and decoding in one line:
+`cat test.txt | java LZWencode.java | java LZWpack.java | java LZWunpack.java | java LZWdecode.java > out.hex`
