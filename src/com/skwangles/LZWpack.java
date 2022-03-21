@@ -8,7 +8,7 @@ public class LZWpack {
     private static final int initalDictSize = 17;//Is 17, because we are operating with non-zerobased values (0 is escape)
     private static int bitsRequired;
     private static int countOfPhrases;
-    private static int outByte;
+    private static byte outByte;
     private static int bitsInUse;
 
     public static void main(String[] args){
@@ -26,7 +26,7 @@ public class LZWpack {
         try {
             while (scanner.hasNext()) {
                 text = scanner.next();
-                packToBinary(Integer.parseInt(text) + 1);//Stream value through - Uses non-zero based indexes (Reserves 0 as escape char)
+                packToBinary((byte) (Integer.parseInt(text)));//Stream value through - Uses non-zero based indexes (Reserves 0 as escape char)
             }
         }
         catch (Exception e){
@@ -43,12 +43,12 @@ public class LZWpack {
         System.out.flush();//Prints the bytes in the buffer to the output
     }
 
-    private static void packToBinary(int input){
+    private static void packToBinary(byte input){
         updateBitsRequired(); //Update currentMaxBits
         if((outputBitCount - bitsInUse) < bitsRequired){//See if remainder the of space can fit the input
-            int temp =  (input << (2* outputBitCount - bitsRequired - bitsInUse));//Creates the overflow value
-            int shiftedInput = (input >> (bitsRequired - (outputBitCount - bitsInUse)));//Shifts the bits to fit in the remaining space
-            outByte =  (outByte | shiftedInput);
+            byte temp = (byte) (input << (2* outputBitCount - bitsRequired - bitsInUse));//Creates the overflow value
+            byte shiftedInput = (byte) (input >> (bitsRequired - (outputBitCount - bitsInUse)));//Shifts the bits to fit in the remaining space
+            outByte = (byte) (outByte | shiftedInput);
             printOut(outByte);
             outByte = temp;
             bitsInUse = bitsRequired + bitsInUse - outputBitCount;
@@ -60,8 +60,8 @@ public class LZWpack {
             bitsInUse = 0;//Finally, resets the amount of the byte used to 0
         }
         else{//The int will fit easily - but not finish the byte
-            int shiftedInput = (input << ((outputBitCount - bitsInUse)- bitsRequired));//Aligns bits with the next unused space
-            outByte = outByte | shiftedInput;//ORs the bits together
+            byte shiftedInput = (byte) (input << ((outputBitCount - bitsInUse)- bitsRequired));//Aligns bits with the next unused space
+            outByte = (byte) (outByte | shiftedInput);//ORs the bits together
             bitsInUse += bitsRequired;//Increase the amount used
         }
     }
