@@ -26,7 +26,7 @@ public class LZWpack {
         try {
             while (scanner.hasNext()) {
                 text = scanner.next();
-                packToBinary(Integer.parseInt(text)+1);//Stream value through - Adding 1 to use non-zero based indexes (Reserves 0 as escape char)
+                packToBinary(Integer.parseInt(text) + 1);//Stream value through - Uses non-zero based indexes (Reserves 0 as escape char)
             }
         }
         catch (Exception e){
@@ -74,6 +74,5 @@ public class LZWpack {
 
     private static void printOut(int outByte){
         System.out.write(outByte);
-
     }
 }

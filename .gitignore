@@ -1,2 +1,6 @@
 com/skwangles/*
 *.class
+.idea
+*.iml
+/shelf/
+/workspace.xml
