@@ -79,11 +79,10 @@ public class LZWpack {
     }
 
     private static void printOut(int outByte){
-
         System.out.write(outByte);
     }
 
-    private static String printBin(int bin) {
+    private static String printBin(int bin) {//For testing purposes
         String out = String.format("%8s", Integer.toBinaryString(bin)).replace(' ', '0');
         return out.substring(out.length()-8);
     }
