@@ -55,6 +55,7 @@ public class LZWpack {
         }
         else if((outputBitCount - bitsInUse) == bitsRequired) {
             //int will fit perfectly - no wiggle room
+            outByte = (byte) (outByte | input);
             printOut(outByte);
             outByte = 0;//Cleans the byte to avoid carried bits
             bitsInUse = 0;//Finally, resets the amount of the byte used to 0
@@ -73,6 +74,6 @@ public class LZWpack {
     }
 
     private static void printOut(int outByte){
-        System.out.write(outByte);
+        System.out.println(outByte);
     }
 }
