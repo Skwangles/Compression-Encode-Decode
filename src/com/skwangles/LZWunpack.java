@@ -30,7 +30,7 @@ public class LZWunpack {
 
         }
 
-        for (int i = 0; (i + bitsRequired) < stream.length(); i += bitsRequired) {
+        for (int i = 0; (i + bitsRequired) <= stream.length(); i += bitsRequired) {
             updateBitsRequired();
 
             String nextPhraseString = stream.substring(i, i + bitsRequired);
@@ -40,7 +40,6 @@ public class LZWunpack {
                 System.out.println(nextPhrase - 1);
             }
         }
-
         System.out.flush();
     }
 

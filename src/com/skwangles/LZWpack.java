@@ -79,6 +79,7 @@ public class LZWpack {
     }
 
     private static void printOut(int outByte){
+        //System.out.println(printBin(outByte));
         System.out.write(outByte);
     }
 
