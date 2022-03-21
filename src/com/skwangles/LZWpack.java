@@ -1,6 +1,8 @@
 package com.skwangles;
 //Alexander Stokes - 1578409, Liam Labuschagne - 1575313
 //Alexander developed this part
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class LZWpack {
@@ -8,10 +10,12 @@ public class LZWpack {
     private static final int initalDictSize = 17;//Is 17, because we are operating with non-zerobased values (0 is escape)
     private static int bitsRequired;
     private static int countOfPhrases;
-    private static byte outByte;
+    private static int outByte;
     private static int bitsInUse;
 
+
     public static void main(String[] args){
+
         //Setup
         bitsInUse = 0;//The full 8bytes are unused
         outByte = 0;//Has no value
@@ -26,7 +30,7 @@ public class LZWpack {
         try {
             while (scanner.hasNext()) {
                 text = scanner.next();
-                packToBinary((byte) (Integer.parseInt(text)+1));//Stream value through - Uses non-zero based indexes (Reserves 0 as escape char)
+                packToBinary((Integer.parseInt(text)+1));//Stream value through - Uses non-zero based indexes (Reserves 0 as escape char)
             }
         }
         catch (Exception e){
@@ -40,15 +44,16 @@ public class LZWpack {
         if(bitsInUse != 0){
             printOut(outByte);
         }
+
         System.out.flush();//Prints the bytes in the buffer to the output
     }
 
-    private static void packToBinary(byte input){
+    private static void packToBinary(int input){
         updateBitsRequired(); //Update currentMaxBits
         if((outputBitCount - bitsInUse) < bitsRequired){//See if remainder the of space can fit the input
-            byte temp = (byte) (input << (2* outputBitCount - bitsRequired - bitsInUse));//Creates the overflow value
-            byte shiftedInput = (byte) (input >> (bitsRequired - (outputBitCount - bitsInUse)));//Shifts the bits to fit in the remaining space
-            outByte = (byte) (outByte | shiftedInput);
+            int temp = (input << (2* outputBitCount - bitsRequired - bitsInUse));//Creates the overflow value
+            int shiftedInput =  (input >> (bitsRequired - (outputBitCount - bitsInUse)));//Shifts the bits to fit in the remaining space
+            outByte = (outByte | shiftedInput);
             printOut(outByte);
             outByte = temp;
             bitsInUse = bitsRequired + bitsInUse - outputBitCount;
@@ -61,8 +66,8 @@ public class LZWpack {
             bitsInUse = 0;//Finally, resets the amount of the byte used to 0
         }
         else{//The int will fit easily - but not finish the byte
-            byte shiftedInput = (byte) (input << ((outputBitCount - bitsInUse)- bitsRequired));//Aligns bits with the next unused space
-            outByte = (byte) (outByte | shiftedInput);//ORs the bits together
+            int shiftedInput = (input << ((outputBitCount - bitsInUse)- bitsRequired));//Aligns bits with the next unused space
+            outByte = (outByte | shiftedInput);//ORs the bits together
             bitsInUse += bitsRequired;//Increase the amount used
         }
     }
@@ -74,6 +79,12 @@ public class LZWpack {
     }
 
     private static void printOut(int outByte){
+
         System.out.write(outByte);
+    }
+
+    private static String printBin(int bin) {
+        String out = String.format("%8s", Integer.toBinaryString(bin)).replace(' ', '0');
+        return out.substring(out.length()-8);
     }
 }
