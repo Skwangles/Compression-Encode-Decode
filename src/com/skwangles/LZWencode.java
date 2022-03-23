@@ -1,48 +1,50 @@
 package com.skwangles;
 //Alexander Stokes - 1578409, Liam Labuschagne - 1575313
 //Alexander developed this part
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+
 
 public class LZWencode {
     public static char[] applicableChars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-    public static StringBuilder input;
+    public static char input;//Holds the very first char, and holds the char between navigate.Trie calls.
     public static int phrases;
     public static void main(String[] args){
         //
         //Setup
         //
-        input = new StringBuilder();
         phrases = 0;//Defines the starting phrase number
         TrieNode root = new TrieNode('\0', -1);//Root has no applicable phrase number
         for (char c: applicableChars) {
             root.AddChild(c, getPhraseNumber());//Creates Node, and assigns phraseNumber
         }
-        readInInput();//Parses the HEX
+        input = getNextChar();//Gets the first char
         //
         //Encoding
         //
-        while(input.length() > 0) {
-            int outValue = root.navigateTrie();//Gets the longest path
-            System.out.println(outValue);//----Prints out to Standard Out----
+        while(input != '\0') {
+            int[] outValue = root.navigateTrie(input);//Gets the longest path
+
+            System.out.println(outValue[0]);//----Prints out to Standard Out----
+            input = (char) outValue[1];
         }
     }
 
-
-    private static void readInInput(){
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String text;
+    public static char getNextChar(){//Gets a single char - if end of stream, return escape char '\0'
+        int text;
         try {
-            while ((text = br.readLine()) != null) {
-                text = text.replaceAll("\\s","").toUpperCase();//Removes all whitespace
-                if(text.equals("")) continue;//Do not add an empty string
-                input.append(text);//Adds to input string, and ensures all hex chars are uppercase
+            while ((text = System.in.read()) != -1  || input != '\0')  {
+                if((char) text == '\n') continue;//Skip spaces
+
+                if(text == -1 || text < (int)applicableChars[0] || text > (int)applicableChars[applicableChars.length-1]) return '\0';//Returns escape char if outside the ascii bounds of the acceptable Chars
+                else return Character.toUpperCase((char) text);
             }
         }
         catch (Exception e){
             System.out.println("Exception Thrown: " + e);
         }
+        return '\0';
     }
+
+
 
     public static int getPhraseNumber(){//Updates the phrase number
         phrases++;
@@ -70,18 +72,18 @@ class TrieNode {
         this.children[index] = new TrieNode(c, phraseNum);
     }
 
-    public int navigateTrie(){//Uses the static value of the complete input - and slowly chips off the chars as it is parsed.
-        if(LZWencode.input.length() > 0){//String must have at least 1 char - otherwise end of input is found
+
+    public int[] navigateTrie(char next){//Uses the static value of the complete input - and slowly chips off the chars as it is parsed.
+        if(next != '\0'){//Must be an applicable char, else end is found
             for (TrieNode child : children) {
                 if(child == null) break; //If null item, the rest of the array will be Null
-                if (child.character == LZWencode.input.charAt(0)) {
-                    LZWencode.input.deleteCharAt(0);//Remove the parsed char
-                    return child.navigateTrie();//Goes down a step, removing the used char from the string - recursive call
+                if (child.character == next) {
+                    return child.navigateTrie(LZWencode.getNextChar());//Goes down a step, removing the used char from the string - recursive call
                 }
             }
-            //If this is reached, no child matches the first char -- assuming it is not null/empty - so should be added the Trie
-            AddChild(LZWencode.input.charAt(0), LZWencode.getPhraseNumber());
+            AddChild(next, LZWencode.getPhraseNumber());//If this is reached, no child matches the first char -- assuming it is not null/empty - so should be added the Trie
+            return new int[] {this.phraseNum, (int) next};//Passes back the next char - without accessing the variable directly
         }
-        return this.phraseNum;
+        return new int[] {this.phraseNum, 0};//return phrase + escape char
     }
 }
