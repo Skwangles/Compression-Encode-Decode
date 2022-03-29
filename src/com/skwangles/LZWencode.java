@@ -34,7 +34,7 @@ public class LZWencode {
             while ((text = System.in.read()) != -1  || input != '\0')  {
                 if((char) text == '\n') continue;//Skip spaces
 
-                if(text == -1 || text < (int)applicableChars[0] || text > (int)applicableChars[applicableChars.length-1]) return '\0';//Returns escape char if outside the ascii bounds of the acceptable Chars
+                if(text == -1 || Character.toUpperCase((char) text) < (int)applicableChars[0] || Character.toUpperCase((char) text) > (int)applicableChars[applicableChars.length-1]) return '\0';//Returns escape char if outside the ascii bounds of the acceptable Chars
                 else return Character.toUpperCase((char) text);
             }
         }
