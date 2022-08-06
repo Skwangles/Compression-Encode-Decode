@@ -1,6 +1,6 @@
-Made by: Liam L & Alexander S for a paper at the University of Waikato. 
-Alexander made the Encoder & the Bitpacker
-Liam made the decoder & the Bitunpacker
+Made by: Liam L & Alexander S for a paper at the University of Waikato.   
+Alexander made the Encoder & the Bitpacker  
+Liam made the decoder & the Bitunpacker  
 
 # LZW-Encode-Decode
 LZW Compression algorithm - Encodes, Decodes (Extra feature: Bitpacking included)
