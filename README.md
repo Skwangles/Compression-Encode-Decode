@@ -1,4 +1,8 @@
-# COMPX301-LZW-Encode-Decode
+Made by: Liam L & Alexander S for a paper at the University of Waikato. 
+Alexander made the Encoder & the Bitpacker
+Liam made the decoder & the Bitunpacker
+
+# LZW-Encode-Decode
 LZW Compression algorithm - Encodes, Decodes (Extra feature: Bitpacking included)
 
 cat \<file\> | java LZWencode.java -> will encode HEX (0-9A-F) to a series of LZW Phrase Numbers
@@ -27,3 +31,7 @@ or
 
 ## Test encoding, packing, unpacking and decoding in one line:
 `cat test.txt | java LZWencode.java | java LZWpack.java | java LZWunpack.java | java LZWdecode.java > out.hex`
+
+
+## Known issues
+The bitpacker has an issue where the # of phrase numbers exceeds 256 (i.e. the max possible size of the next phrase will be more than a single byte) - the packer does not correctly interpret wrap the bits around and will get confused.
