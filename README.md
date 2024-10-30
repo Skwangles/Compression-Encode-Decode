@@ -1,6 +1,7 @@
 Made by: Liam L & Alexander S for a paper at the University of Waikato.   
 
-# NOTE: The BITPACKER DOES NOT HANDLE DICTIONARY PHRASE NUMBERs >256 
+
+# NOTE: The BITPACKER DOES NOT HANDLE DICTIONARY PHRASE NUMBERs >256 (Haven't been bothered to fix this, so beware)
 
 Alexander made the Encoder & the Bitpacker  
 Liam made the decoder & the Bitunpacker  
