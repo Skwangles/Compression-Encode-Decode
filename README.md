@@ -1,89 +1,64 @@
 # LZW Compression, Encoding, and Decoding
 
-A Java implementation of the **Lempel–Ziv–Welch (LZW)** compression algorithm. The project provides tools to:
+Java command-line tools for experimenting with a hexadecimal-focused implementation of **Lempel–Ziv–Welch (LZW)**.
 
-- Encode hexadecimal input into LZW phrase numbers.
-- Decode phrase numbers back into hexadecimal data.
-- Pack variable-width phrase numbers into a binary byte stream.
-- Unpack the binary stream back into phrase numbers.
+This repository currently provides four stdin/stdout programs:
 
-The project was created by **Liam Labuschagne** and **Alexander Stokes** for a paper at the University of Waikato.
+- `LZWencode` — hexadecimal input → LZW phrase numbers
+- `LZWdecode` — phrase numbers → hexadecimal output
+- `LZWpack` — phrase numbers → packed binary bytes
+- `LZWunpack` — packed binary bytes → phrase numbers
 
-## Supported input
+Created by **Liam Labuschagne** and **Alexander Stokes** at the University of Waikato.
 
-The encoder is designed for hexadecimal input using the characters:
+## Current features (Oct 4, 2026)
 
-```text
-0 1 2 3 4 5 6 7 8 9 A B C D E F
-```
+- Streams data through standard input/output (pipeline-friendly)
+- Uppercases input for encoding
+- Ignores newline characters during encoding
+- Encodes/decodes using a hexadecimal alphabet (`0-9`, `A-F`)
+- Packs/unpacks phrase numbers with variable-width bit encoding
 
-Input is converted to uppercase. Newline characters are ignored. Other characters are not treated as valid input and may terminate encoding early.
+## Technology stack
 
-## Project structure
+- **Language:** Java
+- **Dependencies:** Java standard library only (no third-party dependencies)
+- **Build system:** none (compile with `javac` directly)
+- **Test framework:** none in repository (manual CLI verification)
+
+## Repository structure
 
 ```text
 src/com/skwangles/
-├── LZWencode.java   # Hexadecimal input → LZW phrase numbers
-├── LZWdecode.java   # LZW phrase numbers → hexadecimal output
-├── LZWpack.java     # Phrase numbers → packed binary bytes
-├── LZWunpack.java   # Packed binary bytes → phrase numbers
-├── runme.sh         # Convenience script, if available for the local environment
-└── thisbreaksit.txt # Test or development data
+├── LZWencode.java
+├── LZWdecode.java
+├── LZWpack.java
+├── LZWunpack.java
+├── runme.sh
+└── thisbreaksit.txt
 ```
 
-## How the pipeline works
+## Prerequisites
 
-The complete compression pipeline is:
+- JDK installed (`javac`, `java` available on `PATH`)
+- Shell with stdin/stdout piping support
 
-```text
-Hexadecimal input
-    ↓
-LZWencode
-    ↓
-LZW phrase numbers
-    ↓
-LZWpack
-    ↓
-Packed binary output
-```
+## Build / installation
 
-To reverse the process:
-
-```text
-Packed binary input
-    ↓
-LZWunpack
-    ↓
-LZW phrase numbers
-    ↓
-LZWdecode
-    ↓
-Hexadecimal output
-```
-
-## Requirements
-
-- Java Development Kit (JDK)
-- A shell capable of piping standard input and output
-
-The source uses standard Java libraries and does not require third-party dependencies.
-
-## Compile the project
-
-From the repository root, compile the Java sources into the current directory:
+From the repository root:
 
 ```bash
-javac -d . src/com/skwangles/LZWencode.java
-javac -d . src/com/skwangles/LZWdecode.java
-javac -d . src/com/skwangles/LZWpack.java
-javac -d . src/com/skwangles/LZWunpack.java
+javac -d . src/com/skwangles/LZWencode.java \
+          src/com/skwangles/LZWdecode.java \
+          src/com/skwangles/LZWpack.java \
+          src/com/skwangles/LZWunpack.java
 ```
 
-This creates compiled classes under `com/skwangles/`.
+This outputs `.class` files under `com/skwangles/`.
 
-## Run the tools
+## Usage
 
-After compiling, run the classes using their fully qualified names:
+Run each tool after compilation:
 
 ```bash
 java com.skwangles.LZWencode
@@ -92,29 +67,19 @@ java com.skwangles.LZWpack
 java com.skwangles.LZWunpack
 ```
 
-Each tool reads from standard input and writes to standard output, making the programs suitable for Unix-style pipelines.
-
-## Examples
-
-### Encode hexadecimal input
+### Example: encode hexadecimal input
 
 ```bash
 echo "AAABC00FFA2" | java com.skwangles.LZWencode
 ```
 
-The encoder writes one LZW phrase number per line.
-
-### Decode phrase numbers
+### Example: decode phrase numbers
 
 ```bash
-echo "0
-0
-1" | java com.skwangles.LZWdecode
+printf "0\n0\n1\n" | java com.skwangles.LZWdecode
 ```
 
-The decoder reads phrase numbers and writes the corresponding hexadecimal characters.
-
-### Encode and decode in one pipeline
+### Example: encode then decode
 
 ```bash
 echo "AAABC00FFA2" \
@@ -122,42 +87,52 @@ echo "AAABC00FFA2" \
   | java com.skwangles.LZWdecode
 ```
 
-The decoded output should represent the original hexadecimal input.
-
-### Pack and unpack phrase numbers
-
-To test encoding, bitpacking, unpacking, and decoding together:
+### Example: full pack/unpack round-trip
 
 ```bash
-cat test.txt \
+echo "AAABC00FFA2" \
   | java com.skwangles.LZWencode \
   | java com.skwangles.LZWpack \
   | java com.skwangles.LZWunpack \
-  | java com.skwangles.LZWdecode \
-  > out.hex
+  | java com.skwangles.LZWdecode
 ```
 
-`LZWpack` writes binary bytes, so redirect packed output to a file or pipe it directly into `LZWunpack`. Avoid displaying packed output directly in a terminal.
+> `LZWpack` emits binary bytes. Redirect to a file or pipe directly into `LZWunpack` instead of printing packed output directly to a terminal.
 
-## Bitpacking
+## Testing instructions
 
-The packer stores phrase numbers using a variable number of bits. As the dictionary grows, the number of bits used for each phrase number increases. `LZWunpack` follows the same dictionary-size progression to reconstruct the original phrase-number stream.
+There is no automated test suite in this repository.
 
-The packing format reserves zero as an escape or padding value, so phrase numbers are shifted during packing and unpacking.
+To verify behavior manually:
 
-## Known limitations
+1. Compile all classes (see Build section).
+2. Run the example pipelines above.
+3. Optionally try the included sample file:
 
-- The implementation is specialized for hexadecimal input rather than arbitrary text or binary data.
-- The current bitpacker/unpacker has a known limitation when the dictionary grows beyond 256 phrase numbers. Phrase values requiring more than a single byte are not handled reliably.
-- Packed output is binary and should be redirected to a file or passed directly to `LZWunpack`.
-- The command-line tools use standard input and output rather than accepting file paths as arguments.
-- This is an educational implementation and has not been optimized for large-scale production use.
+```bash
+cat src/com/skwangles/thisbreaksit.txt | java com.skwangles.LZWencode
+```
 
-## Contributors
+## Configuration details
+
+- No config files or runtime flags are provided.
+- Alphabet is hardcoded in `LZWencode` (`0-9`, `A-F`).
+- Dictionary growth and bit-width progression are hardcoded in `LZWpack` and `LZWunpack`.
+
+## Limitations / current status
+
+- Implementation is specialized for hexadecimal streams (not a general-purpose text/binary compressor).
+- Long pack/unpack/decode pipelines can fail once dictionary growth exceeds current implementation limits (observed during manual verification).
+- Tools do not accept file-path arguments; they use stdin/stdout only.
+- `src/com/skwangles/runme.sh` is present but does not match the package-qualified commands documented above.
+- Educational project status; not production-hardened.
+
+## Attribution
 
 - **Alexander Stokes** — encoder and bitpacker
 - **Liam Labuschagne** — decoder and bitunpacker
 
 ## License
 
-No license is currently specified for this repository. Contact the repository owners before redistributing or reusing the code.
+No license file is currently included in this repository.
+Contact the repository owner(s) before redistributing or reusing the code.
